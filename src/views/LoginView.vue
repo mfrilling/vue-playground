@@ -3,6 +3,7 @@ import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {useAuth} from '../services/authService'
 import Alert from "@/components/utils/Alert.vue";
+import BaseInput from "@/components/utils/BaseInput.vue";
 
 const router = useRouter()
 const { login } = useAuth()
@@ -10,9 +11,13 @@ const { login } = useAuth()
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const errors = ref({
+  username: '',
+  password: ''
+})
 
 async function onSubmit() {
-  error.value = ''
+  errors.value = { username: '', password: '' }
 
   const result = await login(username.value, password.value)
   if(result.success) {
@@ -31,17 +36,23 @@ async function onSubmit() {
     <h2 class="sr-only">{{ $t('login.title') }}</h2>
 
     <form @submit.prevent="onSubmit">
-      <p v-if="error" style="background-color: red; margin-top: 0.5rem; border-color: darkred; border-style: solid; border-radius: 0.5rem; padding: 0.5rem;">
+      <Alert v-if="error" type="danger" headline="$t('general.error_headline')">
         {{ error }}
-      </p>
-      <div>
-        <label class="form-control-label pb-0 ps-0" for="login-username">{{ $t('general.username') }}</label>
-        <input v-model="username" for="login-username" class="form-control" :placeholder="$t('general.username')"/>
-      </div>
-      <div class="mb-2">
-        <label class="form-control-label pb-0 ps-0" for="login-password">{{ $t('general.password') }}</label>
-        <input v-model="password" id="login-password" type="password" class="form-control" :placeholder="$t('general.password')"/>
-      </div>
+      </Alert>
+      <BaseInput
+          v-model="username"
+          label="general.username"
+          placeholder="..."
+          :error="errors.username"
+          required></BaseInput>
+      <BaseInput
+          v-model="password"
+          type="password"
+          label="Passwort"
+          placeholder="..."
+          :error="errors.password"
+          required
+      />
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="rememberMe" />
         <label for="rememberMe" class="form-check-label">
