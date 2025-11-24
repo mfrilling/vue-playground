@@ -4,7 +4,9 @@ import { httpClient } from './httpClient'
 import {userConfigService} from "@/services/userConfigService.js";
 
 // Reaktiver Auth-Status
-const isAuthenticatedState = ref(!!localStorage.getItem('token'))
+const isAuthenticatedState = ref(
+    !!(localStorage.getItem('token')) || !!(sessionStorage.getItem('token'))
+)
 
 // Optional: User-Infos speichern
 const currentUser = ref(null)
@@ -55,7 +57,7 @@ async function login(username, password, stayLoggedIn = false) {
             password,
         })
 
-        setSession(data)
+        setSession(data, stayLoggedIn)
         await userConfigService.fetchUserConfig()
 
         return { success: true, data }
@@ -78,7 +80,9 @@ function logout() {
 }
 
 function isAuthenticated() {
-    return isAuthenticatedState.value
+    const hasToken = !!(localStorage.getItem('token') || sessionStorage.getItem('token'))
+    isAuthenticatedState.value = hasToken
+    return hasToken
 }
 
 // Für Komponenten (setup)

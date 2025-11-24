@@ -7,6 +7,7 @@ import LoginView from "@/views/LoginView.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import {authService} from '../services/authService';
 import UserSettingsView from "@/views/UserSettingsView.vue";
+import JournalView from "@/views/JournalView.vue";
 
 const routes = [
     {
@@ -26,15 +27,10 @@ const routes = [
         meta: { requiresAuth: true },
         children: [
             {
-                path: 'dashboard',
-                name: 'dashboard',
-                component: DashboardView,
+                path: '',
+                name: 'journal',
+                component: JournalView
             },
-            {
-                path: 'user-settings',
-                name: 'userSettings',
-                component: UserSettingsView,
-            }
         ]
     },
     {
@@ -55,7 +51,7 @@ router.beforeEach((to, from, next) => {
     if (needsAuth && !loggedIn) {
         next('/')
     } else if (to.path === '/' && loggedIn) {
-        next('/dashboard')
+        next('/app')
     } else {
         next()
     }

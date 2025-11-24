@@ -10,6 +10,7 @@ const { login } = useAuth()
 
 const username = ref('')
 const password = ref('')
+const remember = ref(false)
 const error = ref('')
 const errors = ref({
   username: '',
@@ -19,9 +20,9 @@ const errors = ref({
 async function onSubmit() {
   errors.value = { username: '', password: '' }
 
-  const result = await login(username.value, password.value)
+  const result = await login(username.value, password.value, remember.value)
   if(result.success) {
-    router.push({name: 'dashboard'})
+    router.push('/app')
   } else {
     error.value = result.message || 'Login fehlgeschlagen'
   }
@@ -52,7 +53,7 @@ async function onSubmit() {
           :error="errors.password"
       />
       <div class="form-check mb-3">
-        <input type="checkbox" class="form-check-input" id="rememberMe" />
+        <input type="checkbox" class="form-check-input" id="rememberMe" v-model="remember"/>
         <label for="rememberMe" class="form-check-label">
           {{$t('login.remember_me')}}
         </label>

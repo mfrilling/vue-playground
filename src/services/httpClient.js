@@ -1,11 +1,16 @@
 // src/services/httpClient.js
 import { ref, computed } from 'vue'
-import router from "@/router/index.js";
 
 const API_PREFIX = '/api/v1'
 
 // 🔥 globaler Request-Zähler
 const activeRequests = ref(0)
+
+let httpRouter = null
+
+export function registerHttpRouter(router) {
+    httpRouter = router
+}
 
 function startRequest() {
     activeRequests.value++
@@ -103,7 +108,7 @@ async function request(method, path, { body, params, headers } = {}) {
 
             if (error.status === 401) {
                 localStorage.removeItem('token')
-                router.push('/')
+                httpRouter.push('/')
             }
 
             throw error
