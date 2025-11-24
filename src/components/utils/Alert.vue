@@ -10,7 +10,7 @@ const props = defineProps({
 
 <template>
 <div class="alert" :class="`alert-${props.type}`" role="alert">
-  <h2 v-if="props.headline" class="alert-heading">{{props.headline}}</h2>
+  <h4 v-if="props.headline" class="alert-heading fs-6">{{$t(props.headline)}}</h4>
   <slot></slot>
 </div>
 </template>

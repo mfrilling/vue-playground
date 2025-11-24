@@ -25,7 +25,7 @@ export function useHttpLoading() {
 }
 
 function getAuthToken() {
-    return localStorage.getItem('token')
+    return localStorage.getItem('token') || sessionStorage.getItem('token')
 }
 
 function buildUrl(path, params) {

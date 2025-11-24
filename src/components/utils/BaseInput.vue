@@ -48,7 +48,7 @@ const onInput = (event) => {
   <div class="mb-3">
     <label
         v-if="label"
-        class="form-label"
+        class="form-label pb-0 ps-0 mb-0"
         :for="inputId"
     >
       {{ $t(label) }}

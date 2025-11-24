@@ -10,7 +10,7 @@ const isAuthenticatedState = ref(!!localStorage.getItem('token'))
 const currentUser = ref(null)
 
 // HILFSFUNKTION: Daten nach erfolgreichem Login setzen
-function setSession(data) {
+function setSession(data, stayLoggedIn = false) {
     // TODO: an dein Backend anpassen
     // Ich gehe davon aus: data = { token, user }
     const token = data?.token
@@ -19,7 +19,11 @@ function setSession(data) {
         throw new Error('Kein Token in der Login-Antwort gefunden.')
     }
 
-    localStorage.setItem('token', token)
+    if(!stayLoggedIn) {
+        sessionStorage.setItem('token', token)
+    } else {
+        localStorage.setItem('token', token)
+    }
     isAuthenticatedState.value = true
 
     if (data.user) {
@@ -40,7 +44,7 @@ if (storedUser) {
 
 // --- Public API ---
 
-async function login(username, password) {
+async function login(username, password, stayLoggedIn = false) {
     if (!username || !password) {
         return { success: false, message: 'Bitte Benutzername und Passwort eingeben.' }
     }

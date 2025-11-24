@@ -36,22 +36,20 @@ async function onSubmit() {
     <h2 class="sr-only">{{ $t('login.title') }}</h2>
 
     <form @submit.prevent="onSubmit">
-      <Alert v-if="error" type="danger" headline="$t('general.error_headline')">
+      <Alert v-if="error" type="danger" headline="general.error_headline">
         {{ error }}
       </Alert>
       <BaseInput
           v-model="username"
           label="general.username"
           placeholder="..."
-          :error="errors.username"
-          required></BaseInput>
+          :error="errors.username"></BaseInput>
       <BaseInput
           v-model="password"
           type="password"
           label="Passwort"
           placeholder="..."
           :error="errors.password"
-          required
       />
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="rememberMe" />
@@ -59,7 +57,7 @@ async function onSubmit() {
           {{$t('login.remember_me')}}
         </label>
       </div>
-      <button class="btn btn-primary w-100" type="submit" :disabled="!username || !password">{{ $t('login.button_label') }}</button>
+      <button class="btn btn-primary w-100" type="submit">{{ $t('login.button_label') }}</button>
     </form>
   </section>
 </template>
