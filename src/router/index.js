@@ -4,10 +4,10 @@ import LoginLayout from "@/layouts/LoginLayout.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 import LoginView from "@/views/LoginView.vue";
-import DashboardView from "@/views/DashboardView.vue";
-import {authService} from '../services/authService';
-import UserSettingsView from "@/views/UserSettingsView.vue";
 import JournalView from "@/views/JournalView.vue";
+
+import {authService} from '@/services/authService';
+import {userConfigService} from "@/services/userConfigService";
 
 const routes = [
     {
@@ -24,7 +24,7 @@ const routes = [
     {
         path: '/app',
         component: AppLayout,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, requiresUserConfig: true },
         children: [
             {
                 path: '',
@@ -44,16 +44,34 @@ const router = createRouter({
     routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const loggedIn = authService.isAuthenticated()
     const needsAuth = to.matched.some(record => record.meta.requiresAuth)
+    const needsUserConfig = to.matched.some(record => record.meta.requiresUserConfig)
 
     if (needsAuth && !loggedIn) {
         next('/')
     } else if (to.path === '/' && loggedIn) {
         next('/app')
-    } else {
+    }
+
+    try {
+        // wenn eingeloggt, Route geschützt & Config noch nicht geladen → nachladen
+        if (loggedIn && needsAuth && needsUserConfig && !userConfigService.isLoaded) {
+            const result = await userConfigService.fetchUserConfig()
+
+            if (!result.success) {
+                // falls Config-Load schiefgeht → z. B. Logout + Login-Seite
+                authService.logout()
+                return next('/')
+            }
+        }
+
         next()
+    } catch (e) {
+        console.error('Fehler beim Laden der UserConfig:', e)
+        authService.logout()
+        next('/')
     }
 })
 

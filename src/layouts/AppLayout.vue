@@ -26,7 +26,10 @@ function handleLogout() {
 
     <main class="app-main">
       <!-- Hier erscheinen die geschützten Views -->
-      <RouterView />
+      <div class="screen screen-narrow px-3 px-lg-5 py-2 d-block">
+        <RouterView />
+
+      </div>
     </main>
   </div>
 </template>

@@ -3,10 +3,7 @@ import { ref, computed } from 'vue'
 import { httpClient } from './httpClient'
 import {userConfigService} from "@/services/userConfigService.js";
 
-// Reaktiver Auth-Status
-const isAuthenticatedState = ref(
-    !!(localStorage.getItem('token')) || !!(sessionStorage.getItem('token'))
-)
+
 
 // Optional: User-Infos speichern
 const currentUser = ref(null)
@@ -46,61 +43,34 @@ if (storedUser) {
 
 // --- Public API ---
 
-async function login(username, password, stayLoggedIn = false) {
-    if (!username || !password) {
-        return { success: false, message: 'Bitte Benutzername und Passwort eingeben.' }
+async function getJournalData(house, date) {
+    if (!house || !date) {
+        return {success: false, message: 'Es wurde kein Haus oder kein Datum angegeben.'}
     }
 
     try {
-        const data = await httpClient.post('/auth/login', {
-            name: username,
-            password,
-        })
+        const data = await httpClient.get(`/journal/${house}/${date}/`)
 
-        setSession(data, stayLoggedIn)
-        await userConfigService.fetchUserConfig()
-
-        return { success: true, data }
+        return {success: true, data}
     } catch (error) {
         // Fehlertext vom Backend oder Fallback
         return {
             success: false,
-            message: error.message || 'Login fehlgeschlagen.',
+            message: error.message || 'Fehler beim Abruf der Journaldaten.',
             status: error.status,
             raw: error.data,
         }
     }
 }
 
-function logout() {
-    localStorage.removeItem('token')
-    sessionStorage.removeItem('token')
-    localStorage.removeItem('user')
-    isAuthenticatedState.value = false
-    currentUser.value = null
-    userConfigService.clearUserConfig()
-}
-
-function isAuthenticated() {
-    const hasToken = !!(localStorage.getItem('token') || sessionStorage.getItem('token'))
-    isAuthenticatedState.value = hasToken
-    return hasToken
-}
-
 // Für Komponenten (setup)
-export function useAuth() {
+export function useJournalService() {
     return {
-        isAuthenticated: computed(() => isAuthenticatedState.value),
-        currentUser: computed(() => currentUser.value),
-        login,
-        logout,
+        getJournalData,
     }
 }
 
 // Für Router usw.
-export const authService = {
-    login,
-    logout,
-    isAuthenticated,
-    getUser: () => currentUser.value,
+export const journalService = {
+    getJournalData,
 }
