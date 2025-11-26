@@ -1,6 +1,6 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
-import { useUserConfig } from '@/services/userConfigService.js'
+import {computed, ref, watch} from 'vue'
+import {useUserConfig} from '@/services/userConfigService.js'
 import BaseSelect from '@/components/utils/BaseSelect.vue'
 
 const props = defineProps({
@@ -10,7 +10,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'journal.house.label' // i18n-Key
+    default: 'journal.form.house' // i18n-Key
   },
   required: {
     type: Boolean,

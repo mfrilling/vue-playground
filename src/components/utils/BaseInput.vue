@@ -14,6 +14,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  labelEnd: {
+    type: String,
+    default: ''
+  },
   id: {
     type: String,
     default: ''
@@ -29,6 +33,14 @@ const props = defineProps({
   required: {
     type: Boolean,
     default: false
+  },
+  groupUnit: {
+    type: String,
+    default: ''
+  },
+  formGroupClasses: {
+    type: String,
+    default: ''
   }
 })
 
@@ -45,22 +57,37 @@ const onInput = (event) => {
 </script>
 
 <template>
-  <div class="mb-3">
+  <div class="mb-3" :class="props.formGroupClasses">
     <label
-        v-if="label"
-        class="form-label pb-0 ps-0 mb-0"
+        v-if="label || labelEnd"
+        class="form-label pb-0 ps-0 mb-0 w-100"
         :for="inputId"
     >
-      {{ $t(label) }}
-      <span v-if="required" class="text-danger">*</span>
+      <span class="" v-if="label">{{ $t(label) }}</span>
+      <span v-if="required && label" class="text-danger">*</span>
+      <span v-if="labelEnd" class="text-muted col-6 text-end">{{$t(labelEnd)}}</span>
     </label>
 
+    <div class="input-group" v-if="groupUnit">
+      <input
+          :id="inputId"
+          :type="type"
+          class="form-control"
+          :class="{ 'is-invalid': error }"
+          :placeholder="$t(placeholder) || '...'"
+          :value="modelValue"
+          @input="onInput"
+          :required="required"
+      />
+      <span class="input-group-text col-2 justify-content-center">{{groupUnit}}</span>
+    </div>
     <input
+        v-else
         :id="inputId"
         :type="type"
         class="form-control"
         :class="{ 'is-invalid': error }"
-        :placeholder="$t(placeholder)"
+        :placeholder="$t(placeholder) || '...'"
         :value="modelValue"
         @input="onInput"
         :required="required"

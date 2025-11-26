@@ -8,7 +8,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: 'journal.date.label'
+    default: 'journal.form.date'
   },
   id: {
     type: String,
