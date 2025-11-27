@@ -60,12 +60,12 @@ const onInput = (event) => {
   <div class="mb-3" :class="props.formGroupClasses">
     <label
         v-if="label || labelEnd"
-        class="form-label pb-0 ps-0 mb-0 w-100"
+        class="form-label pb-0 ps-0 mb-0 w-100 col-12 d-flex justify-content-between"
         :for="inputId"
     >
       <span class="" v-if="label">{{ $t(label) }}</span>
       <span v-if="required && label" class="text-danger">*</span>
-      <span v-if="labelEnd" class="text-muted col-6 text-end">{{$t(labelEnd)}}</span>
+      <span v-if="labelEnd" class="text-muted text-end">{{$t(labelEnd)}}</span>
     </label>
 
     <div class="input-group" v-if="groupUnit">

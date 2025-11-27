@@ -9,6 +9,10 @@ const props = defineProps({
 
 <template>
 
+
+  <label class="form-label pb-0 ps-0 mb-0 col-12 text-end">
+    <span class="text-muted text-end">{{ $t('general.today') }}</span>
+  </label>
   <div class="row">
     <div class="col-3">
       <label for="amount" class="form-label">{{ $t('journal.form.losses') }}</label>

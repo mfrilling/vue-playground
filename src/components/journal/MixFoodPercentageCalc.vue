@@ -42,6 +42,7 @@ watch(
       v-model="form.mixfood"
       type="number"
       label="journal.form.mischfutter"
+      label-end="general.yesterday"
       groupUnit="kg"
       :class="{ 'd-none': showPercentages }"
   />
@@ -51,6 +52,7 @@ watch(
       v-model="form.wheat"
       type="number"
       label="journal.form.weizen"
+      label-end="general.yesterday"
       groupUnit="kg"
       :class="{ 'd-none': showPercentages }"
   />
@@ -59,6 +61,7 @@ watch(
     v-model="sum"
     type="number"
     label="journal.form.sum"
+    label-end="general.yesterday"
     :class="{ 'd-none': !showPercentages }"
     groupUnit="kg"/>
 
@@ -66,6 +69,7 @@ watch(
     v-model="percentage"
     type="number"
     label="journal.form.percentage"
+    label-end="general.yesterday"
     :class="{ 'd-none': !showPercentages }"
     groupUnit="%"/>
 

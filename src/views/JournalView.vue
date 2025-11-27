@@ -139,6 +139,8 @@ function mapDataToForm(data) {
   form.VerlusteAbendsTote = data.VerlusteAbendsTote ?? ''
   form.notes = data.Bemerkungen ?? ''
   form.alarm = data.Alarm ?? ''
+  form.technology = data.Stalltechnik ?? ''
+  form.emergencyPower = data.Notstrom ?? ''
 }
 
 function mapToV1Api(key) {
@@ -176,6 +178,7 @@ function submit() {
           v-model="form.animalWeight"
           type="number"
           label="journal.form.tiergewicht"
+          label-end="general.yesterday"
           groupUnit="g"
       />
 
@@ -184,6 +187,7 @@ function submit() {
           v-model="form.water"
           type="number"
           label="journal.form.wasser"
+          label-end="general.yesterday"
           groupUnit="l"
       />
     </Card>
@@ -210,6 +214,7 @@ function submit() {
         <BaseInput v-model="form.tempMax"
                    type="text"
                    groupUnit="°C"
+                   label="&nbsp;"
                    labelEnd="Gestern"
                    formGroupClasses="col-6"
                    placeholder="journal.form.temperature_max"></BaseInput>
@@ -226,6 +231,7 @@ function submit() {
                    type="text"
                    groupUnit="°C"
                    formGroupClasses="col-6"
+                   label="&nbsp;"
                    labelEnd="Gestern"
                    placeholder="journal.form.humidity_max"></BaseInput>
       </div>
@@ -240,10 +246,15 @@ function submit() {
 
       <BaseTextarea v-model="form.notes"
                     label="journal.form.notes"
+                    label-end="general.today"
       ></BaseTextarea>
     </Card>
 
     <Card classes="mb-4">
+      <label class="form-label pb-0 ps-0 d-flex justify-content-between">
+        <span>{{ $t('journal.form.technology_checklist')}}</span>
+        <span class="text-muted text-end">{{ $t('general.today') }}</span>
+      </label>
       <BadgeCheckbox v-model="form.alarm" label="journal.form.alarm"></BadgeCheckbox>
       <BadgeCheckbox v-model="form.technology" label="journal.form.stalltechnik"></BadgeCheckbox>
       <BadgeCheckbox v-model="form.emergencyPower" label="journal.form.notstrom"></BadgeCheckbox>

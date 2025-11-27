@@ -57,7 +57,7 @@ const onInput = (event) => {
         :for="textareaId"
     >
       <span>{{ $t(label) }}</span>
-      <span v-if="labelEnd" class="text-muted small">{{ labelEnd }}</span>
+      <span v-if="labelEnd" class="text-muted">{{ $t(labelEnd) }}</span>
     </label>
 
     <textarea
