@@ -17,11 +17,11 @@ watch(
     (newVal) => {
       showPercentages.value = newVal
       if (newVal) {
-        sum.value= ( parseInt(props.form.mischfutter) + parseInt(props.form.weizen) )
-        percentage.value = (parseInt(props.form.weizen) / (parseInt(sum.value))) * 100
+        sum.value= ( parseInt(props.form.mixfood) + parseInt(props.form.wheat) )
+        percentage.value = (parseInt(props.form.wheat) / (parseInt(sum.value))) * 100
       } else {
-        props.form.mischfutter = (parseInt(sum.value) - (parseInt(sum.value) * parseInt(percentage.value) / 100))
-        props.form.weizen = (parseInt(sum.value) * parseInt(percentage.value) / 100)
+        props.form.mixfood = (parseInt(sum.value) - (parseInt(sum.value) * parseInt(percentage.value) / 100))
+        props.form.wheat = (parseInt(sum.value) * parseInt(percentage.value) / 100)
       }
     },
     { immediate: true } // optional, dann wird der initiale Wert direkt übernommen
@@ -39,7 +39,7 @@ watch(
 
   <!-- Misch -->
   <BaseInput
-      v-model="form.mischfutter"
+      v-model="form.mixfood"
       type="number"
       label="journal.form.mischfutter"
       groupUnit="kg"
@@ -48,7 +48,7 @@ watch(
 
   <!-- Weizen -->
   <BaseInput
-      v-model="form.weizen"
+      v-model="form.wheat"
       type="number"
       label="journal.form.weizen"
       groupUnit="kg"

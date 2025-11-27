@@ -23,11 +23,34 @@ const selectedHouse = ref(localStorage.getItem('selectedHouse') || '')
 const selectedDate = ref(localStorage.getItem('selectedDate') || '')
 const journalData = ref(null)
 
+const apiV1Map = {
+  animalWeight: "Tiergewicht",
+  water: "Wasser",
+  mixfood: "Mischfutter",
+  wheat: "Getreide",
+  tempMin: "TemperaturMin",
+  tempMax: "TemperaturMax",
+  humidityMin: "FeuchtigkeitMin",
+  humidityMax: "FeuchtigkeitMax",
+  VerlusteMorgensKleine: "VerlusteMorgensKleine",
+  VerlusteMorgensSelektierte: "VerlusteMorgensSelektierte",
+  VerlusteMorgensTote: "VerlusteMorgensTote",
+  VerlusteAbendsKleine: "VerlusteAbendsKleine",
+  VerlusteAbendsSelektierte: "VerlusteAbendsSelektierte",
+  VerlusteAbendsTote: "VerlusteAbendsTote",
+  notes: "Bemerkungen",
+  alarm: "Alarm",
+  emergencyPower: "Notstrom",
+  technology: "Stalltechnik"
+}
+
+// TODO: mapper schreiben
+
 const form = reactive({
-  tiergewicht: '',
-  wasser: '',
-  mischfutter: '',
-  weizen: '',
+  animalWeight: '',
+  water: '',
+  mixfood: '',
+  wheat: '',
   feedingPhases: [],
   VerlusteMorgensKleine: '',
   VerlusteMorgensSelektierte: '',
@@ -39,10 +62,10 @@ const form = reactive({
   tempMax: '',
   humidityMin: '',
   humidityMax: '',
-  Bemerkungen: '',
-  Alarm: '',
-  Notstrom: '',
-  Stalltechnik: ''
+  notes: '',
+  alarm: '',
+  emergencyPower: '',
+  technology: ''
 })
 
 watch([selectedHouse, selectedDate],
@@ -73,10 +96,10 @@ watch(
 
 function mapDataToForm(data) {
   if (!data) {
-    form.tiergewicht = ''
-    form.wasser = ''
-    form.mischfutter = ''
-    form.weizen = ''
+    form.animalWeight = ''
+    form.water = ''
+    form.mixfood = ''
+    form.wheat = ''
     form.feedingPhases = []
     form.VerlusteMorgensKleine = ''
     form.VerlusteMorgensSelektierte = ''
@@ -88,15 +111,15 @@ function mapDataToForm(data) {
     form.tempMax = ''
     form.humidityMin = ''
     form.humidityMax = ''
-    form.Bemerkungen = ''
-    form.Alarm = ''
+    form.notes = ''
+    form.alarm = ''
     return
   }
 
-  form.tiergewicht = data.Tiergewicht ?? ''
-  form.wasser = data.Wasser ?? ''
-  form.mischfutter = data.Mischfutter ?? ''
-  form.weizen = data.Getreide ?? ''
+  form.animalWeight = data.Tiergewicht ?? ''
+  form.water = data.Wasser ?? ''
+  form.mixfood = data.Mischfutter ?? ''
+  form.wheat = data.Getreide ?? ''
   form.feedingPhases = [
     data.FutterphaseStart && 'FutterphaseStart',
     data.Futterphase1 && 'Futterphase1',
@@ -114,8 +137,12 @@ function mapDataToForm(data) {
   form.VerlusteAbendsKleine = data.VerlusteAbendsKleine ?? ''
   form.VerlusteAbendsSelektierte = data.VerlusteAbendsSelektierte ?? ''
   form.VerlusteAbendsTote = data.VerlusteAbendsTote ?? ''
-  form.Bemerkungen = data.Bemerkungen ?? ''
-  form.Alarm = data.Alarm ?? ''
+  form.notes = data.Bemerkungen ?? ''
+  form.alarm = data.Alarm ?? ''
+}
+
+function mapToV1Api(key) {
+  return apiV1Map[key] || key;
 }
 
 function submit() {
@@ -126,7 +153,7 @@ function submit() {
       return;
     }
     if (form[key] !== '') {
-      payload[key] = form[key];
+      payload[mapToV1Api(key)] = form[key];
     }
   })
   console.log('### foobar',payload, {...form})
@@ -146,7 +173,7 @@ function submit() {
 
     <Card>
       <BaseInput
-          v-model="form.tiergewicht"
+          v-model="form.animalWeight"
           type="number"
           label="journal.form.tiergewicht"
           groupUnit="g"
@@ -154,7 +181,7 @@ function submit() {
 
       <!-- Wasser -->
       <BaseInput
-          v-model="form.wasser"
+          v-model="form.water"
           type="number"
           label="journal.form.wasser"
           groupUnit="l"
@@ -211,15 +238,15 @@ function submit() {
 
     <Card classes="mb-4">
 
-      <BaseTextarea v-model="form.Bemerkungen"
+      <BaseTextarea v-model="form.notes"
                     label="journal.form.notes"
       ></BaseTextarea>
     </Card>
 
     <Card classes="mb-4">
-      <BadgeCheckbox v-model="form.Alarm" label="journal.form.alarm"></BadgeCheckbox>
-      <BadgeCheckbox v-model="form.Stalltechnik" label="journal.form.stalltechnik"></BadgeCheckbox>
-      <BadgeCheckbox v-model="form.Notstrom" label="journal.form.notstrom"></BadgeCheckbox>
+      <BadgeCheckbox v-model="form.alarm" label="journal.form.alarm"></BadgeCheckbox>
+      <BadgeCheckbox v-model="form.technology" label="journal.form.stalltechnik"></BadgeCheckbox>
+      <BadgeCheckbox v-model="form.emergencyPower" label="journal.form.notstrom"></BadgeCheckbox>
     </Card>
 
 
