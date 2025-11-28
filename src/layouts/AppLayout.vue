@@ -1,10 +1,11 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '../services/authService'
 import Navigation from "@/components/Navigation.vue";
 import GlobalAlerts from "@/components/GlobalAlerts.vue";
 
 const router = useRouter()
+const route = useRoute()
 const { logout } = useAuth()
 
 function handleLogout() {
@@ -27,7 +28,9 @@ function handleLogout() {
 
     <main class="app-main">
       <!-- Hier erscheinen die geschützten Views -->
-      <div class="screen screen-narrow px-3 px-lg-5 py-2 d-block">
+      <div class="screen px-3 px-lg-5 py-2 d-block" :class="[{
+        'screen-narrow':  route.meta.isNarrow === true,
+      }]">
         <GlobalAlerts/>
         <RouterView />
 

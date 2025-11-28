@@ -19,12 +19,16 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  showAllOption: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits(['update:modelValue'])
 
-const { userConfig, isUserConfigLoading, userConfigError } = useUserConfig()
+const {userConfig, isUserConfigLoading, userConfigError} = useUserConfig()
 
 // internes Ref, das mit v-model synchronisiert wird
 const selectedHouse = ref(props.modelValue)
@@ -44,10 +48,13 @@ const houseOptions = computed(() => {
     return []
   }
 
-  return Object.entries(cfg.houses).map(([key, house]) => ({
-    value: key,
-    label: house['Bezeichnung'] || key
-  }))
+  return [
+      ...(props.showAllOption ? [{value: 'all', label: 'general.all'}] : []),
+      ...Object.entries(cfg.houses).map(([key, house]) => ({
+      value: key,
+      label: house['Bezeichnung'] || key
+    }))
+  ]
 })
 
 // erste Option automatisch auswählen, sobald vorhanden
@@ -62,7 +69,7 @@ watch(
         emit('update:modelValue', options[0].value)
       }
     },
-    { immediate: true }
+    {immediate: true}
 )
 
 // wenn der User etwas auswählt → nach außen emitten

@@ -194,8 +194,7 @@ function submit() {
 
     <Card classes="mb-4">
       <MixFoodPercentageCalc :form="form" />
-    </Card>
-    <Card>
+
       <alert type="info">
         {{ $t('journal.form.phase_question') }}
       </alert>

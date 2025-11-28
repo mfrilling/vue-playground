@@ -8,6 +8,8 @@ import JournalView from "@/views/JournalView.vue";
 
 import {authService} from '@/services/authService';
 import {userConfigService} from "@/services/userConfigService";
+import HousingView from "@/views/HousingView.vue";
+import HousingDetailsView from "@/views/HousingDetailsView.vue";
 
 const routes = [
     {
@@ -29,8 +31,24 @@ const routes = [
             {
                 path: '',
                 name: 'journal',
-                component: JournalView
+                component: JournalView,
+                meta: {isNarrow: true}
             },
+            {
+                path: '/housings',
+                name: 'housings',
+                component: HousingView
+            },
+            {
+                path: '/housings/details',
+                name: 'housingDetails',
+                component: HousingDetailsView
+            },
+            {
+                path: '/housings/details/:id?',
+                name: 'housingDetailsWithId',
+                component: HousingDetailsView
+            }
         ]
     },
     {

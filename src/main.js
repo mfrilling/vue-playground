@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '@popperjs/core'
 import 'bootstrap'
 import './assets/main.css'
 

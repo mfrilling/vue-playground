@@ -1,5 +1,13 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+
+// Alle Routen, die unter "Events" hängen:
+const eventRouteNames = ['housings', 'medications', 'salmonellaProbes', 'harvests', 'slaughters', 'foodDeliveries', 'foodRemains']
+
+const isEventsActive = computed(() => eventRouteNames.includes(route.name))
 </script>
 
 <template>
@@ -21,6 +29,21 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <RouterLink class="nav-link" :to="{name:'journal'}" active-class="active">{{$t('journal.title')}}</RouterLink>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle"
+             :class="{active: isEventsActive}"
+             noref
+             id="navEreignis"
+             role="button"
+             data-bs-toggle="dropdown">
+            {{ $t('events.title') }}
+          </a>
+            <ul class="dropdown-menu" aria-labelledby="navEreignis" data-bs-popper="static">
+              <li>
+                <RouterLink class="dropdown-item" id="navEinstallung" :to="{name: 'housings'}" data-bs-dismiss="dropdown">🥚 {{ $t('events.housings.title') }}</RouterLink>
+              </li>
+            </ul>
         </li>
       </ul>
     </div>
