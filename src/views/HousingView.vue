@@ -8,6 +8,7 @@ import {useHousingService} from "@/services/housingService";
 import {useNotifications} from "@/services/notificationService"
 import HousingOverviewCard from "@/components/events/HousingOverviewCard.vue";
 import Pagination from "@/components/utils/Pagination.vue";
+import Card from "@/components/ui/Card.vue";
 
 const {getHousingData} = useHousingService()
 const {notifyError} = useNotifications()
@@ -55,9 +56,16 @@ watch(currentPage, () => {
     <BaseInput v-model="flockNumber" label="events.housings.herd" class="col-6"></BaseInput>
   </div>
 
-  <HousingOverviewCard v-for="housing in housings"
-                       :housing="housing"
-                       :key="housing.ID"></HousingOverviewCard>
+  <template v-if="housings.length > 0">
+    <HousingOverviewCard v-for="housing in housings"
+                         :housing="housing"
+                         :key="housing.ID"></HousingOverviewCard>
+  </template>
+  <template v-else>
+    <Card class="text-center">
+      {{$t('general.no_data')}}
+    </Card>
+  </template>
 
   <Pagination v-model:current-page="currentPage" :last-page="15" :items-per-page="15"></Pagination>
 </template>
