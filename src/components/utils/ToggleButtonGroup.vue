@@ -14,7 +14,7 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  class: {
+  classes: {
     type: String,
     default: "mb-3",
   },
@@ -83,7 +83,7 @@ function onSelect(option) {
   </label>
   <div
     class="btn-group w-100"
-    :class="class"
+    :class="classes"
     role="group"
   >
     <button
@@ -106,7 +106,6 @@ function onSelect(option) {
 <style scoped>
 .btn-group-toggle {
   display: inline-flex;
-  //gap: 0.25rem;
 }
 
 </style>

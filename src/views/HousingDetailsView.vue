@@ -1,9 +1,8 @@
 <script setup>
-import {computed, ref, watch, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useHousingService} from "@/services/housingService";
-import {useNotifications} from "@/services/notificationService";
-import {useHousingSelection} from "@/composables/useHousingSelection.js";
 import {useDateService} from "@/services/dateService.js";
+import {useNotifications} from "@/services/notificationService.js";
 import HouseSelect from "@/components/HouseSelect.vue";
 import BaseInput from "@/components/utils/BaseInput.vue";
 import Card from "@/components/ui/Card.vue";
@@ -16,20 +15,30 @@ import RaceSelect from "@/components/events/RaceSelect.vue";
 import HatcherySelect from "@/components/events/HatcherySelect.vue";
 import EmergingChicksSelect from "@/components/events/EmergingChicksSelect.vue";
 
-const {selectedHousing} = useHousingSelection();
 const {today, subtractDays} = useDateService();
+const {notifySuccess} = useNotifications();
 
 const props = defineProps({
-  id: {
+  /*id: { // wenn
     type: String,
     required: false,
+  },*/
+  house: {
+    type: String,
+    required: false,
+    default: '',
   },
+  date: {
+    type: String,
+    required: false,
+    default: '',
+  }
 })
 
 const {getHousingDetailsData, putHousingDetailsData} = useHousingService()
 const {notifyError} = useNotifications()
 
-const isEditMode = computed(() => !!props.id)
+const isEditMode = computed(() => !!props.house && !!props.date)
 
 const form = ref(createEmptyForm()) // deine eigene Funktion / Struktur
 const isAnimalCollapseOpen = ref(false)
@@ -39,7 +48,7 @@ const isCleaningCollapseOpen = ref(false)
 function createEmptyForm() {
   const threeDaysAgo = subtractDays(new Date(Date.now()), 3)
   const thisDay = today()
-  const selectedHouse = ref(localStorage.getItem('selectedHouse') || '')
+  const selectedHouse = ref(props.house || '')
 
   return {
     hatchery: "",
@@ -87,8 +96,7 @@ async function loadHousing() {
   }
 
   try {
-    const housing = selectedHousing.value;
-    const result = await getHousingDetailsData(housing.Stall, housing.Datum);
+    const result = await getHousingDetailsData(props.house, props.date);
     if (result.success) {
       // API-Response passend ins Form mappen
       Object.keys(result.data).forEach((key) => {
@@ -151,7 +159,7 @@ function oncancel() {
   router.push({name: "housings"});
 }
 
-function submit() {
+async function submit() {
   console.log('### submit', form.value)
   let payload = {};
   Object.keys(form.value).forEach(key => {
@@ -160,7 +168,12 @@ function submit() {
     }
   })
   console.log('### payload', payload)
-  putHousingDetailsData(form.value.housing, form.value.date, payload)
+  const result = await putHousingDetailsData(form.value.housing, form.value.date, payload)
+
+  if (result.success) {
+    notifySuccess('events.housings.details.success', 10000)
+    router.push({name: "housings"});
+  }
 }
 
 onMounted(() => {
@@ -248,7 +261,7 @@ onMounted(() => {
         v-model="form.origin"
         label="events.housings.details.origin"
         :options="[{value: 'bornAndRaised', label: 'events.housings.details.born_and_raised'}, {value: 'raised', label: 'events.housings.details.raised'}, {value: 'raisedIn', label: 'events.housings.details.raised_in'}]"
-        :class="form.origin === 'raisedIn' ? 'mb-1' : 'mb-3'"
+        :classes="form.origin === 'raisedIn' ? 'mb-1' : 'mb-3'"
       />
       <BaseInput
         v-show="form.origin === 'raisedIn'"

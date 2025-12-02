@@ -9,7 +9,6 @@ import Pagination from "@/components/utils/Pagination.vue";
 import Card from "@/components/ui/Card.vue";
 import BaseModal from "@/components/utils/BaseModal.vue";
 import HouseSelectionCheckboxes from "@/components/events/HouseSelectionCheckboxes.vue";
-import {useHousingSelection} from "@/composables/useHousingSelection.js";
 
 import {useHousingService} from "@/services/housingService";
 import {useNotifications} from "@/services/notificationService";
@@ -17,7 +16,6 @@ import router from "@/router/index.js";
 
 const { getHousingData, duplicateHousingData, deleteHousingData } = useHousingService();
 const { notifySuccess, notifyError } = useNotifications();
-const { setSelectedHousing } = useHousingSelection();
 
 // Filter / Pagination
 const selectedHouse = ref("");
@@ -118,8 +116,7 @@ async function confirmDuplication() {
 
 // Edit-Form
 function openDetailsForm(housing) {
-  setSelectedHousing(housing);
-  router.push({ name: "housingDetails", params: { id: housing.ID } });
+  router.push({ name: "housingDetails", params: { house: housing.Stall, date: housing.Datum } });
 }
 
 // Deletion-Modal

@@ -34,7 +34,7 @@ function onEditClick() {
         {{ housing.Stall }}
       </div>
       <div class="col-6 col-md-4 col-lg-2 center-vertical">
-        {{$t('events.housings.herd')}}: {{ housing.Herde ?? '-' }}
+        {{ $t('events.housings.herd') }}: {{ housing.Herde ?? '-' }}
       </div>
       <div class="col-6 col-md-4 col-lg-2 center-vertical">
         {{ $t('events.housings.week_of_life_short') }}: {{ housing.Lebenswoche ?? '-' }}

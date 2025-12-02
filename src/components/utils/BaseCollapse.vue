@@ -57,7 +57,10 @@ function toggle() {
           </slot>
         </span>
 
-        <span class="collapse-icon" aria-hidden="true">
+        <span
+          class="collapse-icon"
+          aria-hidden="true"
+        >
           <!-- kleines Caret, das sich dreht -->
           <span
             class="collapse-caret"
@@ -72,7 +75,10 @@ function toggle() {
     <!-- Body -->
     <Transition name="collapse-fade">
       <!-- v-show → Inhalt bleibt im DOM (State bleibt erhalten) -->
-      <div v-show="isOpen" class="collapse-body">
+      <div
+        v-show="isOpen"
+        class="collapse-body"
+      >
         <slot />
       </div>
     </Transition>

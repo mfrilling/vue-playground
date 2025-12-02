@@ -40,7 +40,8 @@ const routes = [
                 component: HousingView
             },
             {
-                path: 'housings/details/:id?',
+                // path: 'housings/details/:id?', // ggf für später, wenn zugriff über ID API-Seitig möglich ist
+                path: 'housings/details/:house?/:date?',
                 name: 'housingDetails',
                 component: HousingDetailsView,
                 meta: {isNarrow: true},
