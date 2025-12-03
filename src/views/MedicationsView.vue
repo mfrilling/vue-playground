@@ -75,7 +75,6 @@ watch(currentPage, () => {
 
 // Duplicate-Modal
 function openDuplicateModal(medication) {
-  console.log(medication)
   duplicateTarget.value = medication;
   duplicateHouses.value = [medication.Stall]; // Start: aktueller Stall vorausgewählt (optional)
   showDuplicateModal.value = true;
@@ -88,7 +87,6 @@ function closeDuplicateModal() {
 }
 
 function onDuplicateSelect(houseName, checked) {
-  console.log(houseName, checked)
   if (checked) {
     if (!duplicateHouses.value.includes(houseName)) {
       duplicateHouses.value.push(houseName);

@@ -51,6 +51,20 @@ async function getMedicationData(house, page = 0, housing = '', type = '') {
     }
 }
 
+async function postMedicationData(payload) {
+    try {
+        let response = await httpClient.post('/medication', payload)
+        return {success: true, data: response}
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message || 'Fehler beim Speichern der Einstallungsdaten.',
+            status: error.status,
+            raw: error.data,
+        }
+    }
+}
+
 async function duplicateMedicationData(medicationdata, targets) {
     try {
         let id = medicationdata?.ID
@@ -121,6 +135,7 @@ async function putMedicationDetailsData(house, date, data) {
 export function useMedicationService() {
     return {
         getMedicationData,
+        postMedicationData,
         duplicateMedicationData,
         deleteMedicationData,
         getMedicationDetailsData,
@@ -131,6 +146,7 @@ export function useMedicationService() {
 // Für Router usw.
 export const medicationService = {
     getMedicationData,
+    postMedicationData,
     duplicateMedicationData,
     deleteMedicationData,
     getMedicationDetailsData,

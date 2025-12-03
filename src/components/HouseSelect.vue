@@ -1,6 +1,6 @@
 <script setup>
-import {computed, ref, watch} from 'vue'
-import {useUserConfig} from '@/services/userConfigService.js'
+import {computed, onMounted, watch} from 'vue'
+import { useUserConfig } from '@/services/userConfigService.js'
 import BaseSelect from '@/components/utils/BaseSelect.vue'
 
 const props = defineProps({
@@ -28,54 +28,45 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const {userConfig} = useUserConfig()
+const { userConfig } = useUserConfig()
 
-// internes Ref, das mit v-model synchronisiert wird
-const selectedHouse = ref(props.modelValue)
+// v-model-Proxy: KEIN extra ref, sondern direkt auf modelValue
+const selectedHouse = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+})
 
-// wenn sich modelValue von außen ändert → internes Ref updaten
-watch(
-    () => props.modelValue,
-    (val) => {
-      selectedHouse.value = val
-    }
-)
-
-// Options für das Select aus userConfig.houses bauen
+// Options aus userConfig.houses bauen
 const houseOptions = computed(() => {
   const cfg = userConfig.value
   if (!cfg || !cfg.houses) {
     return []
   }
 
+  const housesFromConfig = Object.entries(cfg.houses).map(([key, house]) => ({
+    value: key,
+    label: house['Bezeichnung'] || key
+  }))
+
   return [
-      ...(props.showAllOption ? [{value: 'all', label: 'general.all'}] : []),
-      ...Object.entries(cfg.houses).map(([key, house]) => ({
-      value: key,
-      label: house['Bezeichnung'] || key
-    }))
+    ...(props.showAllOption ? [{ value: 'all', label: 'general.all' }] : []),
+    ...housesFromConfig
   ]
 })
 
-// erste Option automatisch auswählen, sobald vorhanden
+// erste Option automatisch auswählen, wenn noch nichts gesetzt ist
 watch(
-    houseOptions,
+    () => houseOptions.value,
     (options) => {
       if (!options || options.length === 0) return
 
-      // Nur setzen, wenn noch nichts gewählt wurde
-      if (!selectedHouse.value) {
-        selectedHouse.value = options[0].value
-        emit('update:modelValue', options[0].value)
+      // Nur setzen, wenn von außen nichts vorgegeben wurde
+      if (!props.modelValue) {
+        selectedHouse.value = options[0].value // triggert emit
       }
     },
-    {immediate: true}
+    { immediate: true }
 )
-
-// wenn der User etwas auswählt → nach außen emitten
-watch(selectedHouse, (val) => {
-  emit('update:modelValue', val)
-})
 </script>
 
 <template>
@@ -84,6 +75,8 @@ watch(selectedHouse, (val) => {
       v-model="selectedHouse"
       :label="label"
       :options="houseOptions"
+      :disabled="disabled || houseOptions.length === 0"
+      :required="required"
     />
   </div>
 </template>
