@@ -3,5 +3,5 @@ export const MEDICATION_TYPE_OPTIONS = [
     {value: 'all', label: "general.all"},
     {value: 'Impfung', label: "events.medications.types.injection"},
     {value: 'Antibiotikum', label: "events.medications.types.antibiotic"},
-    {value: 'Andere', label: "events.medications.types.other"},
+    {value: 'Sonstige', label: "events.medications.types.other"},
 ];

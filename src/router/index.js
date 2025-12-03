@@ -58,6 +58,7 @@ const routes = [
                 path: 'medications/details/:id?',
                 name: 'medicationDetails',
                 component: MedicationsDetailsView,
+                meta: {isNarrow: true},
                 props: true,
             }
         ]

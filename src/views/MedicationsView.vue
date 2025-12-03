@@ -88,6 +88,7 @@ function closeDuplicateModal() {
 }
 
 function onDuplicateSelect(houseName, checked) {
+  console.log(houseName, checked)
   if (checked) {
     if (!duplicateHouses.value.includes(houseName)) {
       duplicateHouses.value.push(houseName);
@@ -102,11 +103,12 @@ function onDuplicateSelect(houseName, checked) {
 async function confirmDuplication() {
   if (!duplicateTarget.value) return;
 
-  const targetHouses = [...duplicateHouses.value];
+  const targetHouses = [...duplicateHouses.value].filter(house => house !== duplicateTarget.value.Stall);
 
   if (targetHouses.length === 0) {
     // TODO: gute Lösung für Modal-Errors finden / onClose ModalErrors leeren
     // notifyError("Bitte mindestens einen Ziel-Stall auswählen.");
+    closeDuplicateModal();
     return;
   }
 
