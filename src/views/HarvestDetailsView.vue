@@ -1,19 +1,17 @@
 <script setup>
-
 import HouseSelect from "@/components/HouseSelect.vue";
 import Card from "@/components/ui/Card.vue";
 import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 import {useNotifications} from "@/services/notificationService.js";
-import {useSalmonellaService} from "@/services/salmonellaService.js";
+import {useHarvestService} from "@/services/harvestService.js";
 import {useDateService} from "@/services/dateService.js";
 import {useCatalogService} from "@/services/catalogService.js";
 import AutoSuggestInput from "@/components/utils/AutoSuggestInput.vue";
-import ToggleButtonGroup from "@/components/utils/ToggleButtonGroup.vue";
 import BaseInput from "@/components/utils/BaseInput.vue";
 
 const {notifySuccess} = useNotifications();
-const {getSalmonellaDetailsData, postSalmonellaData} = useSalmonellaService();
+const {getHarvestDetailsData, postHarvestData} = useHarvestService();
 const {today} = useDateService();
 const {getCatalogData} = useCatalogService();
 
@@ -26,9 +24,7 @@ const props = defineProps({
 })
 
 const form = ref(createEmptyForm())
-const personSuggestions = ref([])
-
-const resultValues = [{value: 'positiv', label: 'general.positive'}, {value: 'negativ', label: 'general.negative'}]
+const butcherOptions = ref([])
 
 function createEmptyForm() {
   const thisDay = today()
@@ -36,22 +32,20 @@ function createEmptyForm() {
   return {
     id: props.id || '',
     housing: "",
-    chickPaperPropeTaker: "",
-    chickPaperProbeResult: "",
-    sockProbeTaker: "",
-    sockProbeDate: thisDay,
-    sockProbeResult: "",
+    date: thisDay,
+    butcher: "",
+    animalCount: "",
+    foodStopDate: "",
   };
 }
 
 const apiV1Map = {
   id: "ID",
   housing: "Stall",
-  chickPaperPropeTaker: "KuekenpapierProbennehmer",
-  chickPaperProbeResult: "KuekenpapierErgebnis",
-  sockProbeTaker: "SockenprobeProbennehmer",
-  sockProbeResult: "SockenprobeErgebnis",
-  sockProbeDate: "SockenprobeDatum",
+  date: "Datum",
+  butcher: "Schlachthof",
+  animalCount: "Tierzahl",
+  foodStopDate: "FuttersystemLeer",
 }
 
 const apiV1ReverseMap = Object.fromEntries(
@@ -74,25 +68,25 @@ async function submit() {
       payload[mapFormToApi(key)] = form.value[key];
     }
   })
-  const result = await postSalmonellaData(payload)
+  const result = await postHarvestData(payload)
   if (result.success) {
-    notifySuccess('events.salmonellaProbes.details.success', 10000)
-    router.push({name: 'salmonellaProbes'})
+    notifySuccess('events.harvests65.details.success', 10000)
+    router.push({name: 'harvests'})
   }
 }
 
-async function loadPersonSuggestions() {
-  const result = await getCatalogData('personen')
-  personSuggestions.value = result
+async function loadButcherSuggestions() {
+  const result = await getCatalogData('schlachthoefe')
+  butcherOptions.value = result
 }
 
 async function loadProbeData() {
-  await loadPersonSuggestions()
+  await loadButcherSuggestions()
   if (!props.id) {
     form.value = createEmptyForm();
     return
   }
-  const result = await getSalmonellaDetailsData(props.id)
+  const result = await getHarvestDetailsData(props.id)
   if (result.success) {
     Object.keys(result.data).forEach(key => {
       form.value[mapApiToForm(key)] = result.data[key];
@@ -114,45 +108,34 @@ onMounted(() => {
     >
       <i class="bi bi-arrow-left-square" /> (cancel)
     </button>
-    {{ $t('events.salmonellaProbes.title') }}
+    {{ $t('events.harvests.details.title') }}
   </h1>
   <form @submit.prevent="submit">
     <Card class="mb-3">
       <house-select v-model="form.housing" />
-
-      <h5 class="mt-4">
-        {{ $t('events.salmonellaProbes.chickPaperProbe.title') }}
-      </h5>
-      <AutoSuggestInput
-        v-model="form.chickPaperPropeTaker"
-        :options="personSuggestions"
-        label="events.salmonellaProbes.chickPaperProbe.taker"
-      />
-
-      <ToggleButtonGroup
-        v-model="form.chickPaperProbeResult"
-        label="events.salmonellaProbes.chickPaperProbe.result"
-        :options="resultValues"
-      />
-
-      <h5 class="mt-4">
-        {{ $t('events.salmonellaProbes.sockProbe.title') }}
-      </h5>
-      <AutoSuggestInput
-        v-model="form.sockProbeTaker"
-        :options="personSuggestions"
-        label="events.salmonellaProbes.chickPaperProbe.taker"
-      />
       <BaseInput
-        v-model="form.sockProbeDate"
-        label="events.salmonellaProbes.sockProbe.date"
+        v-model="form.date"
+        label="events.harvests.details.date"
         type="date"
       />
 
-      <ToggleButtonGroup
-        v-model="form.sockProbeResult"
-        label="events.salmonellaProbes.sockProbe.result"
-        :options="resultValues"
+      <AutoSuggestInput
+        v-model="form.butcher"
+        :options="butcherOptions"
+        display-key="Name"
+        label="events.harvests.details.butcher"
+      />
+
+      <BaseInput
+        v-model="form.animalCount"
+        label="events.harvests.details.animalCount"
+        :group-unit="$t('general.pieces')"
+      />
+
+      <BaseInput
+        v-model="form.foodStopDate"
+        label="events.harvests.details.foodStopDate"
+        type="datetime-local"
       />
 
       <button
