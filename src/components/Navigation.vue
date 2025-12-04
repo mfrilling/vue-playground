@@ -85,6 +85,15 @@ const isEventsActive = computed(() => eventRouteNames.includes(route.name))
                   🦠 {{ $t('events.medications.title') }}
                 </RouterLink>
               </li>
+              <li>
+                <RouterLink
+                  id="navSalmonellaProbe"
+                  class="dropdown-item"
+                  :to="{name: 'salmonellaProbes'}"
+                >
+                  🧪 {{ $t('events.salmonellaProbes.title') }}
+                </RouterLink>
+              </li>
             </ul>
           </li>
         </ul>

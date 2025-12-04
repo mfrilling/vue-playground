@@ -12,6 +12,8 @@ import HousingView from "@/views/HousingView.vue";
 import HousingDetailsView from "@/views/HousingDetailsView.vue";
 import MedicationsView from "@/views/MedicationsView.vue";
 import MedicationsDetailsView from "@/views/MedicationsDetailsView.vue";
+import SalmonellaProbesView from "@/views/SalmonellaProbesView.vue";
+import SalmonellaProbesDetailsView from "@/views/SalmonellaProbesDetailsView.vue";
 
 const routes = [
     {
@@ -58,6 +60,18 @@ const routes = [
                 path: 'medications/details/:id?',
                 name: 'medicationDetails',
                 component: MedicationsDetailsView,
+                meta: {isNarrow: true},
+                props: true,
+            },
+            {
+                path: 'salmonellaProbes',
+                name: 'salmonellaProbes',
+                component: SalmonellaProbesView,
+            },
+            {
+                path: 'salmonellaProbes/details/:id?',
+                name: 'salmonellaProbesDetails',
+                component: SalmonellaProbesDetailsView,
                 meta: {isNarrow: true},
                 props: true,
             }
