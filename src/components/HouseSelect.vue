@@ -56,16 +56,26 @@ const houseOptions = computed(() => {
 
 // erste Option automatisch auswählen, wenn noch nichts gesetzt ist
 watch(
-    () => houseOptions.value,
-    (options) => {
-      if (!options || options.length === 0) return
+  () => houseOptions.value,
+  (options) => {
+    if (!options || options.length === 0) return
 
-      // Nur setzen, wenn von außen nichts vorgegeben wurde
-      if (!props.modelValue) {
-        selectedHouse.value = options[0].value // triggert emit
+    const stored = localStorage.getItem('defaultHouse')
+    const validatedStored = options.find(o => o.value === stored)
+    if (!props.modelValue) {
+      if (props.showAllOption) {
+        selectedHouse.value = options[0].value
+        return
       }
-    },
-    { immediate: true }
+      if (validatedStored.value) {
+        selectedHouse.value = validatedStored.value;
+      }
+    } else {
+      // Nur setzen, wenn von außen nichts vorgegeben wurde
+      selectedHouse.value = options[0].value // triggert emit
+    }
+  },
+  { immediate: true }
 )
 </script>
 

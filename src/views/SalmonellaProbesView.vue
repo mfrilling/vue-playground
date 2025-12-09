@@ -139,7 +139,7 @@ async function confirmDeletion() {
 
   if (result.success) {
     await loadSalmonellaData()
-    notifySuccess("events.housings.deletion_success");
+    notifySuccess("events.salmonellaProbes.deletion_success");
     closeDeletionModal();
   } else {
     notifyError(result.message || "Fehler beim Löschen der Einstallung.");

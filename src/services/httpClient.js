@@ -60,12 +60,14 @@ function buildUrl(path, params) {
 
 async function request(method, path, { body, params, headers } = {}) {
     const url = buildUrl(path, params)
-
     const token = getAuthToken()
+
+    const isFormData = body instanceof FormData
 
     const finalHeaders = {
         Accept: 'application/json',
-        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        // Content-Type nur setzen, wenn es KEIN FormData ist
+        ...(!isFormData && body ? { 'Content-Type': 'application/json' } : {}),
         ...(headers || {}),
     }
 
@@ -76,11 +78,16 @@ async function request(method, path, { body, params, headers } = {}) {
     const options = {
         method,
         headers: finalHeaders,
-        ...(body ? { body: JSON.stringify(body) } : {}),
-        // credentials: 'include', // falls du Sessions nutzt
+        ...(body
+            ? isFormData
+                // FormData direkt durchreichen
+                ? { body }
+                // alles andere als JSON serialisieren
+                : { body: JSON.stringify(body) }
+            : {}),
+        // credentials: 'include',
     }
 
-    // ▶️ Request startet
     startRequest()
 
     try {
@@ -108,7 +115,7 @@ async function request(method, path, { body, params, headers } = {}) {
 
             if (error.status === 401) {
                 localStorage.removeItem('token')
-                httpRouter.push('/')
+                httpRouter && httpRouter.push('/')
             }
 
             throw error
@@ -116,7 +123,6 @@ async function request(method, path, { body, params, headers } = {}) {
 
         return data
     } finally {
-        // egal ob Erfolg oder Fehler – Request ist fertig
         endRequest()
     }
 }
@@ -136,5 +142,21 @@ export const httpClient = {
     },
     delete(path, options = {}) {
         return request('DELETE', path, options)
+    },
+    postFile(path, fileOrFormData, options = {}) {
+        const { fieldName = 'file', ...rest } = options
+
+        let body
+
+        if (fileOrFormData instanceof FormData) {
+            // falls du schon selbst ein FormData gebaut hast
+            body = fileOrFormData
+        } else {
+            const formData = new FormData()
+            formData.append(fieldName, fileOrFormData)
+            body = formData
+        }
+
+        return request('POST', path, { ...rest, body })
     },
 }

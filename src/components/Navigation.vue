@@ -111,6 +111,15 @@ async function handleLogout() {
                   ➡️ {{ $t('events.harvests.title') }}
                 </RouterLink>
               </li>
+              <li>
+                <RouterLink
+                  id="navSlaughter"
+                  class="dropdown-item"
+                  :to="{ name: 'slaughters' }"
+                >
+                  💀 {{ $t('events.slaughters.title') }}
+                </RouterLink>
+              </li>
             </ul>
           </li>
           <li>

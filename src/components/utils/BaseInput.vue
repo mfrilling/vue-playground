@@ -98,7 +98,7 @@ const onInput = (event) => {
         :disabled="disabled"
         @input="onInput"
       >
-      <span class="input-group-text col-2 justify-content-center">{{ groupUnit }}</span>
+      <span class="input-group-text col-2 justify-content-center">{{ $t(groupUnit) }}</span>
     </div>
     <input
       v-else

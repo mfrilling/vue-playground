@@ -16,6 +16,8 @@ import SalmonellaProbesView from "@/views/SalmonellaProbesView.vue";
 import SalmonellaProbesDetailsView from "@/views/SalmonellaProbesDetailsView.vue";
 import HarvestView from "@/views/HarvestView.vue";
 import HarvestDetailsView from "@/views/HarvestDetailsView.vue";
+import SlaughterView from "@/views/slaughterView.vue";
+import SlaughterDetailsView from "@/views/SlaughterDetailsView.vue";
 
 const routes = [
     {
@@ -88,6 +90,18 @@ const routes = [
                 component: HarvestDetailsView,
                 meta: { isNarrow: true },
                 props: true,
+            },
+            {
+                path: 'slaughters',
+                name: 'slaughters',
+                component: SlaughterView
+            },
+            {
+                path: 'slaughters/details/:id?',
+                name: 'slaughterDetails',
+                component: SlaughterDetailsView,
+                meta: { isNarrow: true },
+                props: true,
             }
         ]
     },
@@ -108,9 +122,9 @@ router.beforeEach(async (to, from, next) => {
     const needsUserConfig = to.matched.some(record => record.meta.requiresUserConfig)
 
     if (needsAuth && !loggedIn) {
-        next('/')
+        return next('/')
     } else if (to.path === '/' && loggedIn) {
-        next('/app')
+        return next('/app')
     }
 
     try {
@@ -129,7 +143,7 @@ router.beforeEach(async (to, from, next) => {
     } catch (e) {
         console.error('Fehler beim Laden der UserConfig:', e)
         authService.logout()
-        next('/')
+        return next('/')
     }
 })
 

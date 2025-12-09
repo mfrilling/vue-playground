@@ -19,7 +19,7 @@ if (storedUser) {
 
 // --- Public API ---
 
-async function getHarvestData(house, page = 0,) {
+async function getSlaughterData(house, housing, scope, page = 0,) {
 
     try {
         const params = {
@@ -28,74 +28,81 @@ async function getHarvestData(house, page = 0,) {
         if (house) {
             params.house = house
         }
+        if (house && housing) {
+            params.housingDate = housing
+        } else if (!house && housing) {
+            return
+        }
+        if (scope) {
+            params.coverage = scope
+        }
 
-        let response = await httpClient.get('/harvest', {
+        let response = await httpClient.get('/slaughter', {
             params: params
         })
 
         return { success: true, data: response }
     } catch (error) {
         // Fehlertext vom Backend oder Fallback
+        console.log('error-case', error)
         return {
             success: false,
-            message: error.message || 'Fehler beim Abruf der Einstallungsdaten.',
+            message: error.message || 'Fehler beim Abruf der Schlachtungsdaten.',
             status: error.status,
             raw: error.data,
         }
     }
 }
 
-async function postHarvestData(payload) {
+async function postSlaughterData(payload) {
     try {
-        let response = await httpClient.post('/harvest', payload)
+        let response = await httpClient.post('/slaughter', payload)
         return { success: true, data: response }
     } catch (error) {
         return {
             success: false,
-            message: error.message || 'Fehler beim Speichern der Einstallungsdaten.',
+            message: error.message || 'Fehler beim Speichern der Schlachtungsdaten.',
             status: error.status,
             raw: error.data,
         }
     }
 }
 
-async function duplicateHarvestData(medicationdata, targets) {
-    try {
-        let id = medicationdata?.ID
-        let response = await httpClient.post(`/harvest?sourceId=${id}`, targets)
-
-        return { success: true, data: response }
-    } catch (error) {
-        return {
-            success: false,
-            message: error.message || 'Fehler beim Löschen der Einstallungsdaten',
-            status: error.status,
-            raw: error.data
-        }
-    }
-}
-
-async function deleteHarvestData(salmonellaData) {
+async function deleteSlaughterData(salmonellaData) {
     try {
         let id = salmonellaData?.ID
-        let response = await httpClient.delete(`/harvest/${id}`)
+        let response = await httpClient.delete(`/slaughter/${id}`)
 
         return { success: true, data: response }
     } catch (error) {
         return {
             success: false,
-            message: error.message || 'Fehler beim Löschen der Einstallungsdaten',
+            message: error.message || 'Fehler beim Löschen der Schlachtungsdaten.',
             status: error.status,
             raw: error.data
         }
     }
 }
 
-async function getHarvestDetailsData(id) {
+async function uploadSlaughterData(file) {
+    try {
+        const response = await httpClient.postFile('/slaughter', file)
+        return { success: true, data: response }
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message || 'Fehler beim Hochladen der Schlachtungsdaten.',
+            status: error.status,
+            raw: error.data,
+        }
+    }
+}
+
+async function getSlaughterDetailsData(id) {
     try {
         let response
         if (id) {
-            response = await httpClient.get(`/harvest/${id}`)
+            response = await httpClient.get(`/slaughter/${id}`)
         }
 
         return { success: true, data: response }
@@ -103,21 +110,21 @@ async function getHarvestDetailsData(id) {
         // Fehlertext vom Backend oder Fallback
         return {
             success: false,
-            message: error.message || 'Fehler beim Abruf der Einstallungsdaten.',
+            message: error.message || 'Fehler beim Abruf der Schlachtungsdaten.',
             status: error.status,
             raw: error.data,
         }
     }
 }
 
-async function putHarvestDetailsData(id, data) {
+async function putSlaughterDetailsData(id, data) {
     try {
-        let response = await httpClient.put(`/harvest/${id}`, data)
+        let response = await httpClient.put(`/slaughter/${id}`, data)
         return { success: true, data: response }
     } catch (error) {
         return {
             success: false,
-            message: error.message || 'Fehler beim Speichern der Einstallungsdaten.',
+            message: error.message || 'Fehler beim Speichern der Schlachtungsdaten.',
             status: error.status,
             raw: error.data,
         }
@@ -126,23 +133,23 @@ async function putHarvestDetailsData(id, data) {
 
 
 // Für Komponenten (setup)
-export function useHarvestService() {
+export function useSlaughterService() {
     return {
-        getHarvestData,
-        postHarvestData,
-        duplicateHarvestData,
-        deleteHarvestData,
-        getHarvestDetailsData,
-        putHarvestDetailsData
+        getSlaughterData,
+        postSlaughterData,
+        deleteSlaughterData,
+        uploadSlaughterData,
+        getSlaughterDetailsData,
+        putSlaughterDetailsData
     }
 }
 
 // Für Router usw.
-export const harvestService = {
-    getHarvestData,
-    postHarvestData,
-    duplicateHarvestData,
-    deleteHarvestData,
-    getHarvestDetailsData,
-    putHarvestDetailsData
+export const slaugterService = {
+    getSlaughterData,
+    postSlaughterData,
+    deleteSlaughterData,
+    uploadSlaughterData,
+    getSlaughterDetailsData,
+    putSlaughterDetailsData
 }
