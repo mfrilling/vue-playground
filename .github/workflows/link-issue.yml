@@ -3,7 +3,7 @@ name: Auto-link issue on branch create
 on:
   create:
     # feuert, wenn Branches erstellt werden
-    types: [branch]
+    types: [branch, pull_request]
 
 permissions:
   contents: write
