@@ -1,0 +1,113 @@
+name: Auto-link issue on branch create
+
+on:
+  create:
+    # feuert, wenn Branches erstellt werden
+    types: [branch]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  link-issue:
+    if: |
+      (github.event_name == 'create' && github.event.ref_type == 'branch') ||
+      (github.event_name == 'push')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract branch name
+        id: br
+        run: |
+          if [ "${{ github.event_name }}" = "create" ]; then
+            echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            # push-event
+            echo "name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Parse issue number from branch
+        id: parse
+        run: |
+          BR="${{ steps.br.outputs.name }}"
+          # Beispiele, die erkannt werden:
+          # feature/Test-1_test_issue  -> 1
+          # bugfix/ISSUE-42-title      -> 42
+          # hotfix/123-fix             -> 123
+          # Wir nehmen die erste zusammenhängende Ziffernfolge:
+          NUM=$(echo "$BR" | sed -n 's/.*\([0-9][0-9]*\).*/\1/p' | head -n1)
+          if [ -z "$NUM" ]; then
+            echo "Kein Issue-Muster in Branch: $BR. Beende."
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "issue=$NUM" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
+
+      - name: Stop if no issue number
+        if: steps.parse.outputs.skip == 'true'
+        run: echo "Skipping, no issue number detected."
+
+      - name: Link issue via PR (create/update)
+        if: steps.parse.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = core.getInput('branch', { required: false }) || '${{ steps.br.outputs.name }}';
+            const issueNumber = parseInt('${{ steps.parse.outputs.issue }}', 10);
+            const { owner, repo } = context.repo;
+
+            // 1) Prüfen, ob das Issue existiert
+            try {
+              await github.rest.issues.get({ owner, repo, issue_number: issueNumber });
+            } catch (e) {
+              core.info(`Issue #${issueNumber} nicht gefunden – breche ab.`);
+              return;
+            }
+
+            // 2) PR zur Branch finden (head=owner:branch)
+            const prs = await github.rest.pulls.list({
+              owner, repo, state: 'open', head: `${owner}:${branch}`
+            });
+
+            const linkLine = `Ref #${issueNumber}`; // alternativ: 'Fixes #' zum Auto-Schließen beim Merge
+            const base = context.payload.repository.default_branch;
+
+            if (prs.data.length > 0) {
+              const pr = prs.data[0];
+
+              // Body ergänzen, falls Link fehlt
+              const body = pr.body || '';
+              if (!body.includes(`#${issueNumber}`)) {
+                await github.rest.pulls.update({
+                  owner, repo, pull_number: pr.number,
+                  body: (body ? body + '\n\n' : '') + linkLine
+                });
+                core.info(`PR #${pr.number} aktualisiert und mit Issue #${issueNumber} verlinkt.`);
+              } else {
+                core.info(`PR #${pr.number} ist bereits mit Issue #${issueNumber} verlinkt.`);
+              }
+            } else {
+              // 3) Draft-PR erstellen, der die Verknüpfung herstellt
+              const title = branch.startsWith('renovate/') ? branch : `[${branch}] Link to #${issueNumber}`;
+              const pr = await github.rest.pulls.create({
+                owner, repo,
+                head: branch,
+                base,
+                title,
+                body: linkLine,
+                draft: true
+              });
+              core.info(`Draft-PR #${pr.data.number} erstellt und mit Issue #${issueNumber} verlinkt.`);
+            }
+
+            // 4) Optional: Kommentar im Issue mit direktem Branch-Link
+            const branchUrl = `https://github.com/${owner}/${repo}/tree/${encodeURIComponent(branch)}`;
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: issueNumber,
+              body: `🔗 Branch erstellt: [\`${branch}\`](${branchUrl})`
+            });
+          result-encoding: string

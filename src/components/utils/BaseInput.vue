@@ -121,7 +121,3 @@ const onInput = (event) => {
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>
