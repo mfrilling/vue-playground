@@ -145,11 +145,13 @@ onMounted(() => {
       <BaseInput
         v-model="form.date"
         type="date"
+        label="events.slaughter.details.date"
       />
 
       <BaseSelect
         v-model="form.slaughterHouse"
         :options="slaughterHouses"
+        label="events.slaughter.details.slaughterHouse"
       />
 
       <ToggleButtonGroup

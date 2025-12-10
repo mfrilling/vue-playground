@@ -11,7 +11,7 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: "events.slaugter.scope",
+    default: "events.slaughter.scope",
   },
 });
 

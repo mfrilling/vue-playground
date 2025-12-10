@@ -42,7 +42,7 @@ const onChange = (event) => {
     <label
       :for="id"
       class="btn btn-outline-primary"
-      aria-label="{{ $(label) }}"
+      :aria-label="label"
     > <slot />
       <input
         :id="id"

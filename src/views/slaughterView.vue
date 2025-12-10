@@ -33,9 +33,9 @@ const deletionTarget = ref(null);
 
 // Daten laden
 async function loadSlaughterData() {
-  const house = selectedHouse.value !== "all" ? selectedHouse.value : null;
-  const housing = selectedHousing.value !== "all" ? selectedHousing.value : null;
-  const scope = selectedScope.value !== "all" ? selectedScope.value : null;
+  const house = selectedHouse.value === "all" ? null : selectedHouse.value;
+  const housing = selectedHousing.value === "all" ? null : selectedHousing.value;
+  const scope = selectedScope.value === "all" ? null : selectedScope.value;
 
   try {
     const result = await getSlaughterData(house, housing, scope, currentPage.value);
@@ -55,10 +55,10 @@ async function loadSlaughterData() {
 watch(
     [selectedHouse, selectedHousing, selectedScope],
     () => {
-      if (currentPage.value !== 0) {
-        currentPage.value = 0;
-      } else {
+      if (currentPage.value === 0) {
         loadSlaughterData();
+      } else {
+        currentPage.value = 0;
       }
     }
 );
@@ -141,7 +141,6 @@ async function uploadFile(file) {
   </Alert>
 
   <div class="row">
-    <!-- TODO: Filter anpassen (Einstallung, Umfang) -->
     <HouseSelect
       v-model="selectedHouse"
       :show-all-option="true"
