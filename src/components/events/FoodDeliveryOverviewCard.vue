@@ -27,7 +27,7 @@ function onEditClick() {
 
 <template>
   <Card>
-    <div class="row">
+    <div class="row align-items-center">
       <div class="col-6 col-md-4 col-lg-2 fw-bold center-vertical">
         {{ formatReadable(delivery.Datum) }}
         <span
@@ -51,7 +51,7 @@ function onEditClick() {
       <div class="col-6 col-md-4 col-lg-2 center-vertical">
         {{ delivery.Menge }} {{ $t("general.kilograms_short") }}
       </div>
-      <div class="col-12 col-md-12 col-lg-4 text-end">
+      <div class="col-12 col-md-12 col-lg-4 d-flex justify-content-end">
         <button
           v-if="!delivery.Import"
           class="btn btn-primary my-1 mx-1"

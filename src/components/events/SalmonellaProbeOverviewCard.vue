@@ -30,7 +30,7 @@ function onEditClick() {
 
 <template>
   <Card>
-    <div class="row">
+    <div class="row align-items-center">
       <div class="col-6 col-md-4 col-lg-2 fw-bold center-vertical">
         {{ $t('events.salmonella_probes.chick_paper_probe') }}: {{ formatReadable(salmonellaProbe.KuekenpapierProbeDatum) }}
       </div>
@@ -41,7 +41,7 @@ function onEditClick() {
         {{ salmonellaProbe.Stall }}
       </div>
       <div class="col-6 col-md-4 col-lg-2 center-vertical my-lg-3" />
-      <div class="col-12 col-md-12 col-lg-4 text-end">
+      <div class="col-12 col-md-12 col-lg-4 d-flex justify-content-end">
         <button
           class="btn btn-primary my-1 mx-1 "
           type="button"
