@@ -39,6 +39,10 @@ const routes = [
         meta: { requiresAuth: true, requiresUserConfig: true },
         children: [
             {
+                path: '',
+                redirect: '/app/journal',
+            },
+            {
                 path: 'journal',
                 name: 'journal',
                 component: JournalView,
@@ -119,7 +123,7 @@ const routes = [
             },
             {
                 path: '/:pathMatch(.*)*',
-                redirect: '/app/journal',
+                redirect: '/app',
             }
         ]
     },

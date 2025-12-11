@@ -29,7 +29,7 @@ a {
 }
 
 .form-control:not([readonly]):not([disabled]) {
-    background-color: #FFF5BD;
+    background-color: inherit /*#FFF5BD*/;
 }
 
 .form-control {
