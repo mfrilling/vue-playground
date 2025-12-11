@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './assets/dark.css'
 import '@popperjs/core'
 import 'bootstrap'
 import './assets/main.css'
@@ -22,4 +23,4 @@ async function bootstrap() {
     app.mount('#app')
 }
 
-bootstrap()
+await bootstrap()

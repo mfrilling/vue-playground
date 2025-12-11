@@ -2,15 +2,25 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/services/authService'
+import BaseDropdown from "@/components/utils/BaseDropdown.vue";
+import DarkModeToggle from "@/components/ui/DarkModeToggle.vue";
 
 const route = useRoute()
 const router = useRouter()
 const { logout } = useAuth()
 
 // Alle Routen, die unter "Events" hängen:
-const eventRouteNames = ['housings', 'medications', 'salmonellaProbes', 'harvests', 'slaughters', 'foodDeliveries', 'foodRemains']
+const eventRouteNames = new Set([
+  'housings',
+  'medications',
+  'salmonellaProbes',
+  'harvests',
+  'slaughters',
+  'foodDeliveries',
+  'foodRemains'
+])
 
-const isEventsActive = computed(() => eventRouteNames.includes(route.name))
+const isEventsActive = computed(() => eventRouteNames.has(route.name))
 
 async function handleLogout() {
   await logout()
@@ -23,7 +33,6 @@ async function handleLogout() {
     <div class="container-fluid">
       <a
         class="navbar-brand"
-        noref
       >
         <img
           src="@/assets/logo.png"
@@ -58,20 +67,9 @@ async function handleLogout() {
             </RouterLink>
           </li>
           <li class="nav-item dropdown">
-            <a
-              id="navEreignis"
-              class="nav-link dropdown-toggle"
+            <BaseDropdown
+              label="events.title"
               :class="{ active: isEventsActive }"
-              noref
-              role="button"
-              data-bs-toggle="dropdown"
-            >
-              {{ $t('events.title') }}
-            </a>
-            <ul
-              class="dropdown-menu"
-              aria-labelledby="navEreignis"
-              data-bs-popper="static"
             >
               <li>
                 <RouterLink
@@ -99,7 +97,7 @@ async function handleLogout() {
                   class="dropdown-item"
                   :to="{ name: 'salmonellaProbes' }"
                 >
-                  🧪 {{ $t('events.salmonellaProbes.title') }}
+                  🧪 {{ $t('events.salmonella_probes.title') }}
                 </RouterLink>
               </li>
               <li>
@@ -117,10 +115,19 @@ async function handleLogout() {
                   class="dropdown-item"
                   :to="{ name: 'slaughters' }"
                 >
-                  💀 {{ $t('events.slaughters.title') }}
+                  💀 {{ $t('events.slaughter.title') }}
                 </RouterLink>
               </li>
-            </ul>
+              <li>
+                <RouterLink
+                  id="navFoodDeliveries"
+                  class="dropdown-item"
+                  :to="{ name: 'foodDeliveries' }"
+                >
+                  🚚 {{ $t('events.food_deliveries.title') }}
+                </RouterLink>
+              </li>
+            </BaseDropdown>
           </li>
           <li>
             Stallkarte
@@ -129,37 +136,22 @@ async function handleLogout() {
             Analyse
           </li>
           <li class="nav-item dropdown">
-            <a
-              id="navBenutzer"
-              class="nav-link dropdown-toggle"
-              noref
-              role="button"
-              data-bs-toggle="dropdown"
+            <BaseDropdown
+              label="user.title"
             >
-              {{ $t('user.title') }}
-            </a>
-            <ul
-              class="dropdown-menu"
-              aria-labelledby="navBenutzer"
-              data-bs-popper="static"
-            >
-              <li>
-                <a
-                  class="dropdown-item"
-                  noref
-                  @click="handleLogout"
-                >
-                  🚪 {{ $t('general.logout') }}
-                </a>
-              </li>
-            </ul>
+              <a
+                class="dropdown-item"
+                @click="handleLogout"
+              >
+                🚪 {{ $t('general.logout') }}
+              </a>
+            </BaseDropdown>
           </li>
         </ul>
+        <div class="float-end">
+          <DarkModeToggle />
+        </div>
       </div>
     </div>
   </nav>
 </template>
-
-<style scoped>
-
-</style>

@@ -29,7 +29,7 @@ a {
 }
 
 .form-control:not([readonly]):not([disabled]) {
-    background-color: #FFF5BD;
+    background-color: inherit /*#FFF5BD*/;
 }
 
 .form-control {
@@ -100,9 +100,6 @@ input[type="number"] {
     transition: all 0.5s;
     visibility: hidden;
     opacity: 0;
-}
-
-#spinner {
     z-index: 1490;
     color: white;
     text-align: center;
@@ -121,8 +118,6 @@ input[type="number"] {
     background-color: #FFF5BD;
     border: 1px solid #ced4da;
     border-radius: .25rem;
-    /* width: 95%;
-    height: 45%;  */
 }
 
 /* Notification */
@@ -139,7 +134,7 @@ input[type="number"] {
     left: 0;
     right: 0;
     transform: translateY(-50%);
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px, rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px, rgba(0, 0, 0, 0.09) 0 -3px 5px;
 }
 
 #alert.show {
@@ -168,7 +163,6 @@ input[type="number"] {
     padding: 0.3rem 0.1rem;
     /* Grundlage für Ausblenden von Spalten */
     overflow: hidden;
-    /* white-space: nowrap; */
 }
 
 #tblStallkarteSK>thead>tr:first-child>th {
@@ -185,7 +179,6 @@ input[type="number"] {
     vertical-align: middle;
     background: lightgrey !important;
     border: 1px solid grey !important;
-    text-align: center;
     padding: 0.3rem 0.1rem;
     /* Grundlage für Ausblenden von Spalten */
     overflow: hidden;
@@ -561,4 +554,11 @@ input[type="range"]::-ms-fill-upper {
 .fraction .fraction-bottom {
     border-top: 1px solid currentColor;
     margin-top: 0.1em;
+}
+
+.nav-item .nav-link.active,
+.nav-item .dropdown.active,
+.nav-item .dropdown.active .btn.dropdown-toggle,
+.router-link-active.router-link-exact-active {
+    color: #077E3B;
 }

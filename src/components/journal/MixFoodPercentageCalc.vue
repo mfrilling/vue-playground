@@ -28,8 +28,8 @@ watch(
     (newVal) => {
       showPercentages.value = newVal;
 
-      const mixfood = parseInt(form.value.mixfood || 0, 10);
-      const wheat = parseInt(form.value.wheat || 0, 10);
+      const mixfood = Number.parseInt(form.value.mixfood || 0, 10);
+      const wheat = Number.parseInt(form.value.wheat || 0, 10);
 
       if (newVal) {
         // Prozente anzeigen → Summe & Prozent aus aktuellen Werten berechnen
@@ -57,8 +57,8 @@ watch(
 <template>
   <!-- Eingabe in % (Toggle) -->
   <BaseCheckbox
-    v-model="form.eingabeInProzent"
-    label="journal.form.eingabeInProzent"
+    v-model="showPercentages"
+    label="journal.form.input_in_percentage"
     variant="switch"
   />
 
@@ -76,7 +76,7 @@ watch(
   <BaseInput
     v-model="form.wheat"
     type="number"
-    label="journal.form.weizen"
+    label="journal.form.wheat"
     label-end="general.yesterday"
     group-unit="kg"
     :class="{ 'd-none': showPercentages }"
@@ -100,7 +100,3 @@ watch(
     group-unit="%"
   />
 </template>
-
-<style scoped>
-
-</style>

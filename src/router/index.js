@@ -18,6 +18,8 @@ import HarvestView from "@/views/HarvestView.vue";
 import HarvestDetailsView from "@/views/HarvestDetailsView.vue";
 import SlaughterView from "@/views/slaughterView.vue";
 import SlaughterDetailsView from "@/views/SlaughterDetailsView.vue";
+import FoodDeliveryView from "@/views/FoodDeliveryView.vue";
+import FoodDeliveryDetailsView from "@/views/FoodDeliveryDetailsView.vue";
 
 const routes = [
     {
@@ -38,6 +40,10 @@ const routes = [
         children: [
             {
                 path: '',
+                redirect: '/app/journal',
+            },
+            {
+                path: 'journal',
                 name: 'journal',
                 component: JournalView,
                 meta: { isNarrow: true }
@@ -102,6 +108,22 @@ const routes = [
                 component: SlaughterDetailsView,
                 meta: { isNarrow: true },
                 props: true,
+            },
+            {
+                path: 'foodDeliveries',
+                name: 'foodDeliveries',
+                component: FoodDeliveryView
+            },
+            {
+                path: 'foodDeliveries/details/:id?',
+                name: 'foodDeliveryDetails',
+                component: FoodDeliveryDetailsView,
+                meta: { isNarrow: true },
+                props: true,
+            },
+            {
+                path: '/:pathMatch(.*)*',
+                redirect: '/app',
             }
         ]
     },

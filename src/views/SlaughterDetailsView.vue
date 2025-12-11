@@ -151,7 +151,7 @@ onMounted(() => {
       <BaseSelect
         v-model="form.slaughterHouse"
         :options="slaughterHouses"
-        label="events.slaughter.details.slaughterHouse"
+        label="events.slaughter.details.slaughter_house"
       />
 
       <ToggleButtonGroup
@@ -162,21 +162,21 @@ onMounted(() => {
 
       <BaseInput
         v-model="form.amountDelivered"
-        label="events.slaughter.details.amountDelivered"
+        label="events.slaughter.details.amount_delivered"
         group-unit="general.pieces"
       />
 
       <div class="row mb-3">
         <BaseInput
           v-model="form.featherDead"
-          label="events.slaughter.details.featherDead"
+          label="events.slaughter.details.feather_dead"
           group-unit="general.pieces_short"
           class="col-6"
         />
 
         <BaseInput
           v-model="form.featherDeadWeight"
-          label="events.slaughter.details.featherDeadWeight"
+          label="events.slaughter.details.feather_dead_weight"
           group-unit="general.kilograms_short"
           class="col-6"
         />
@@ -192,7 +192,7 @@ onMounted(() => {
 
         <BaseInput
           v-model="form.discardWeight"
-          label="events.slaughter.details.discardWeight"
+          label="events.slaughter.details.discard_weight"
           group-unit="general.kilograms_short"
           class="col-6"
         />
@@ -201,14 +201,14 @@ onMounted(() => {
       <div class="row mb-3">
         <BaseInput
           v-model="form.weightBrutto"
-          label="events.slaughter.details.weightBrutto"
+          label="events.slaughter.details.weight_brutto"
           group-unit="general.kilograms_short"
           class="col-6"
         />
 
         <BaseInput
           v-model="form.weightNetto"
-          label="events.slaughter.details.weightNetto"
+          label="events.slaughter.details.weight_netto"
           group-unit="general.kilograms_short"
           class="col-6"
         />

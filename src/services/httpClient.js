@@ -68,23 +68,25 @@ async function request(method, path, { body, params, headers } = {}) {
         Accept: 'application/json',
         // Content-Type nur setzen, wenn es KEIN FormData ist
         ...(!isFormData && body ? { 'Content-Type': 'application/json' } : {}),
-        ...(headers || {}),
+        ...(headers),
     }
 
     if (token) {
         finalHeaders['Authorization'] = `Bearer ${token}`
     }
 
+    if (body) {
+        if(isFormData) {
+            body = { body }
+        } else {
+            body = { body: JSON.stringify(body) }
+        }
+    }
+
     const options = {
         method,
         headers: finalHeaders,
-        ...(body
-            ? isFormData
-                // FormData direkt durchreichen
-                ? { body }
-                // alles andere als JSON serialisieren
-                : { body: JSON.stringify(body) }
-            : {}),
+        ...body,
         // credentials: 'include',
     }
 
@@ -115,7 +117,7 @@ async function request(method, path, { body, params, headers } = {}) {
 
             if (error.status === 401) {
                 localStorage.removeItem('token')
-                httpRouter && httpRouter.push('/')
+                httpRouter?.push('/')
             }
 
             throw error

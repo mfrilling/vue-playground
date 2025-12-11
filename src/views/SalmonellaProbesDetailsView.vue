@@ -76,14 +76,13 @@ async function submit() {
   })
   const result = await postSalmonellaData(payload)
   if (result.success) {
-    notifySuccess('events.salmonellaProbes.details.success', 10000)
+    notifySuccess('events.salmonella_probes.details.success', 10000)
     router.push({ name: 'salmonellaProbes' })
   }
 }
 
 async function loadPersonSuggestions() {
-  const result = await getCatalogData('personen')
-  personSuggestions.value = result
+  personSuggestions.value = await getCatalogData('personen')
 }
 
 async function loadProbeData() {
@@ -114,44 +113,44 @@ onMounted(() => {
     >
       <i class="bi bi-arrow-left-square" /> (cancel)
     </button>
-    {{ $t('events.salmonellaProbes.title') }}
+    {{ $t('events.salmonella_probes.title') }}
   </h1>
   <form @submit.prevent="submit">
     <Card class="mb-3">
       <house-select v-model="form.housing" />
 
       <h5 class="mt-4">
-        {{ $t('events.salmonellaProbes.chickPaperProbe.title') }}
+        {{ $t('events.salmonella_probes.chick_paper_probes.title') }}
       </h5>
       <AutoSuggestInput
         v-model="form.chickPaperPropeTaker"
         :options="personSuggestions"
-        label="events.salmonellaProbes.chickPaperProbe.taker"
+        label="events.salmonella_probes.chick_paper_probes.taker"
       />
 
       <ToggleButtonGroup
         v-model="form.chickPaperProbeResult"
-        label="events.salmonellaProbes.chickPaperProbe.result"
+        label="events.salmonella_probes.chick_paper_probes.result"
         :options="resultValues"
       />
 
       <h5 class="mt-4">
-        {{ $t('events.salmonellaProbes.sockProbe.title') }}
+        {{ $t('events.salmonella_probes.sockProbe.title') }}
       </h5>
       <AutoSuggestInput
         v-model="form.sockProbeTaker"
         :options="personSuggestions"
-        label="events.salmonellaProbes.chickPaperProbe.taker"
+        label="events.salmonella_probes.chick_paper_probes.taker"
       />
       <BaseInput
         v-model="form.sockProbeDate"
-        label="events.salmonellaProbes.sockProbe.date"
+        label="events.salmonella_probes.sockProbe.date"
         type="date"
       />
 
       <ToggleButtonGroup
         v-model="form.sockProbeResult"
-        label="events.salmonellaProbes.sockProbe.result"
+        label="events.salmonella_probes.sockProbe.result"
         :options="resultValues"
       />
 

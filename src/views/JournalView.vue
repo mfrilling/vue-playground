@@ -168,7 +168,10 @@ function submit() {
       <Alert type="info">
         {{ $t('journal.info') }}
       </Alert>
-      <HouseSelect v-model="selectedHouse" />
+      <HouseSelect
+        v-model="selectedHouse"
+        :save-value="true"
+      />
       <BaseDateStepper
         id="txtDatumTB"
         v-model="selectedDate"
@@ -179,7 +182,7 @@ function submit() {
       <BaseInput
         v-model="form.animalWeight"
         type="number"
-        label="journal.form.tiergewicht"
+        label="journal.form.animal_weight"
         label-end="general.yesterday"
         group-unit="g"
       />
@@ -188,7 +191,7 @@ function submit() {
       <BaseInput
         v-model="form.water"
         type="number"
-        label="journal.form.wasser"
+        label="journal.form.water"
         label-end="general.yesterday"
         group-unit="l"
       />
@@ -203,7 +206,7 @@ function submit() {
 
       <FeedingPhaseToggle
         v-model="form.feedingPhases"
-        label="journal.form.feedingphase"
+        label="journal.form.feeding_phase"
       />
     </Card>
 
@@ -263,10 +266,10 @@ function submit() {
     </Card>
 
     <Card classes="mb-4">
-      <label class="form-label pb-0 ps-0 d-flex justify-content-between">
+      <span class="form-label pb-0 ps-0 d-flex justify-content-between">
         <span>{{ $t('journal.form.technology_checklist') }}</span>
         <span class="text-muted text-end">{{ $t('general.today') }}</span>
-      </label>
+      </span>
       <BadgeCheckbox
         v-model="form.alarm"
         label="journal.form.alarm"

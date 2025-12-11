@@ -34,7 +34,7 @@ const deletionTarget = ref(null);
 
 // Daten laden
 async function loadSalmonellaData() {
-  const house = selectedHouse.value !== "all" ? selectedHouse.value : null;
+  const house = selectedHouse.value === "all" ? null : selectedHouse.value;
 
   try {
     const result = await getSalmonellaData(house, currentPage.value);
@@ -54,10 +54,10 @@ async function loadSalmonellaData() {
 watch(
     [selectedHouse],
     () => {
-      if (currentPage.value !== 0) {
-        currentPage.value = 0;
-      } else {
+      if (currentPage.value === 0) {
         loadSalmonellaData();
+      } else {
+        currentPage.value = 0;
       }
     }
 );
@@ -108,7 +108,7 @@ async function confirmDuplication() {
 
   if (result.success) {
     await loadSalmonellaData();
-    notifySuccess("events.salmonellaProbes.duplication_success");
+    notifySuccess("events.salmonella_probes.duplication_success");
     closeDuplicateModal();
   } else {
     notifyError(result.message || "Fehler beim Duplizieren der Einstallung.");
@@ -139,7 +139,7 @@ async function confirmDeletion() {
 
   if (result.success) {
     await loadSalmonellaData()
-    notifySuccess("events.salmonellaProbes.deletion_success");
+    notifySuccess("events.salmonella_probes.deletion_success");
     closeDeletionModal();
   } else {
     notifyError(result.message || "Fehler beim Löschen der Einstallung.");
@@ -150,7 +150,7 @@ async function confirmDeletion() {
 
 <template>
   <h1 class="title">
-    {{ $t("events.salmonellaProbes.pagetitle") }}
+    {{ $t("events.salmonella_probes.pagetitle") }}
   </h1>
 
   <RouterLink
@@ -158,14 +158,14 @@ async function confirmDeletion() {
     type="button"
     :to="{ name: 'salmonellaProbesDetails' }"
   >
-    {{ $t("events.salmonellaProbes.add") }}
+    {{ $t("events.salmonella_probes.add") }}
   </RouterLink>
 
   <Alert
     type="info"
     class="my-4"
   >
-    {{ $t("events.salmonellaProbes.info") }}
+    {{ $t("events.salmonella_probes.info") }}
   </Alert>
 
   <div class="row">
@@ -200,12 +200,12 @@ async function confirmDeletion() {
   <!-- DUPLICATE MODAL -->
   <BaseModal
     v-model="showDuplicateModal"
-    :title="$t('events.salmonellaProbes.duplicate_modal_title')"
+    :title="$t('events.salmonella_probes.duplicate_modal_title')"
   >
     <template #default>
       <p v-if="duplicateTarget">
         {{
-          $t("events.salmonellaProbes.duplicate_modal_description", {
+          $t("events.salmonella_probes.duplicate_modal_description", {
             date: formatReadable(duplicateTarget.SockenprobeDatum),
             housing: duplicateTarget.Stall,
           })
@@ -241,12 +241,12 @@ async function confirmDeletion() {
   <!-- DELETION MODAL -->
   <BaseModal
     v-model="showDeletionModal"
-    :title="$t('events.salmonellaProbes.deletion_modal_title')"
+    :title="$t('events.salmonella_probes.deletion_modal_title')"
   >
     <template #default>
       <p v-if="deletionTarget">
         {{
-          $t("events.salmonellaProbes.deletion_modal_content", {
+          $t("events.salmonella_probes.deletion_modal_content", {
             date: formatReadable(deletionTarget.SockenprobeDatum),
             housing: deletionTarget.Stall,
           })

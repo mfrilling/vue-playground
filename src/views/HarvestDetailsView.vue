@@ -76,8 +76,7 @@ async function submit() {
 }
 
 async function loadButcherSuggestions() {
-  const result = await getCatalogData('schlachthoefe')
-  butcherOptions.value = result
+  butcherOptions.value = await getCatalogData('schlachthoefe')
 }
 
 async function loadProbeData() {
@@ -128,7 +127,7 @@ onMounted(() => {
 
       <BaseInput
         v-model="form.animalCount"
-        label="events.harvests.details.animalCount"
+        label="events.harvests.details.animal_count"
         :group-unit="$t('general.pieces')"
       />
 

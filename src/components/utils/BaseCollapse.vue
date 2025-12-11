@@ -50,7 +50,7 @@ function toggle() {
       :class="{ 'is-open': isOpen, disabled }"
       @click="toggle"
     >
-      <div class="collapse-header-inner">
+      <span class="collapse-header-inner">
         <span class="collapse-title">
           <slot name="title">
             {{ $t(title) }}
@@ -69,7 +69,7 @@ function toggle() {
             ▾
           </span>
         </span>
-      </div>
+      </span>
     </button>
 
     <!-- Body -->
@@ -157,4 +157,47 @@ function toggle() {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ================================
+   DARK MODE OVERRIDES
+   ================================ */
+
+/* Wrapper */
+.dark-mode .collapse-wrapper {
+  background-color: #1e1e1e;
+  border-color: #333;
+}
+
+/* Header */
+.dark-mode .collapse-header {
+  background: transparent;
+  color: #f8f9fa;
+}
+
+.dark-mode .collapse-header:hover:not(.disabled) {
+  background-color: #252525;
+}
+
+.dark-mode .collapse-header.disabled {
+  opacity: 0.5;
+}
+
+/* Title */
+.dark-mode .collapse-title {
+  color: #f8f9fa;
+}
+
+/* Caret */
+.dark-mode .collapse-caret {
+  filter: invert(1) brightness(1.2);
+  /* optional: etwas stärker leuchten */
+}
+
+/* Body */
+.dark-mode .collapse-body {
+  background-color: #1e1e1e;
+  border-top-color: #333;
+  color: #f8f9fa;
+}
+
 </style>

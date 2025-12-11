@@ -23,6 +23,10 @@ const props = defineProps({
   showAllOption: {
     type: Boolean,
     default: false
+  },
+  saveValue: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -62,7 +66,10 @@ watch(
 
     const stored = localStorage.getItem('defaultHouse')
     const validatedStored = options.find(o => o.value === stored)
-    if (!props.modelValue) {
+    if (props.modelValue) {
+      // Nur setzen, wenn von außen nichts vorgegeben wurde
+      selectedHouse.value = options[0].value // triggert emit
+    } else {
       if (props.showAllOption) {
         selectedHouse.value = options[0].value
         return
@@ -70,12 +77,18 @@ watch(
       if (validatedStored.value) {
         selectedHouse.value = validatedStored.value;
       }
-    } else {
-      // Nur setzen, wenn von außen nichts vorgegeben wurde
-      selectedHouse.value = options[0].value // triggert emit
     }
   },
   { immediate: true }
+)
+
+watch(
+  () => selectedHouse.value,
+  (newVal) => {
+    if(props.saveValue) {
+      localStorage.setItem('defaultHouse', newVal)
+    }
+  }
 )
 </script>
 
